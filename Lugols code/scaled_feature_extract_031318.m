@@ -1,12 +1,12 @@
 clc;clear all
 %% Extract features
 %load('C:\Users\mna14\Desktop\Research\Cevix Image processing\training\coefficients.mat')
-dirlist = dir('*.tif');
+dirlist = [dir('*.tif');dir('*.jpg')];
  for n=1:length(dirlist) 
     %read in data
  img = imread(dirlist(n).name);   
 % img = imread('L99.tif'); 
- imshow(img)
+%  imshow(img)
   
    %% convert to different color spaces
    %rgb
@@ -48,7 +48,6 @@ dirlist = dir('*.tif');
     
  %% Dezero
   img_ind=find(green_list>0);
-  
   nonzero_red=red_list(img_ind);
   nonzero_green=green_list(img_ind);
   nonzero_blue=blue_list(img_ind);
@@ -168,5 +167,5 @@ dirlist = dir('*.tif');
    
   
   end    
- save('features.mat','la_liga')
+ save('color_features.mat','la_liga')
 % diagnosis

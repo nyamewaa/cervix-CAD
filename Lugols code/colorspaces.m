@@ -2,7 +2,7 @@ clc, clear
 %%
 %rgb
 
-img2 = imread('L72.tif');
+img2 = imread('W153.tif');
 
 % figure(1); imshow(img)
 % 
@@ -12,6 +12,7 @@ img2 = imread('L72.tif');
  imshow(img2)
 
 green_img=img2(:,:,3);%rgb2gray(img);%
+mask=(green_img)>0;
 green_list=green_img(:);
 green_img_ind=find(green_list>0);
 nonzero_green=green_list(green_img_ind);
@@ -153,6 +154,7 @@ xlim([0 1.1])
 figure;imagesc(Yimg);colormap('jet');caxis([0 1])
 set(gca,'ytick',[],'xtick',[],'FontSize',24,'FontWeight','bold'); 
 figure;imagesc(CBimg);colormap('jet');caxis([0 1])
+
 set(gca,'ytick',[],'xtick',[],'FontSize',24,'FontWeight','bold'); 
 figure;imagesc(CRimg);colormap('jet');caxis([0 1])
 set(gca,'ytick',[],'xtick',[],'FontSize',24,'FontWeight','bold'); 
@@ -161,15 +163,15 @@ set(gca,'ytick',[],'xtick',[],'FontSize',24,'FontWeight','bold');
 lab = double(rgb2lab(img2));
 
 figure(12);
-l=lab(:,:,1);
-limg=(l-min(min(l)))./(max(max(l))-min(min(l)));
-l=(l-min(min(l)))./(max(max(l))-min(min(l)));
-l=l(:);
+limg=lab(:,:,1);
+% limg=(l-min(min(l)))./(max(max(l))-min(min(l)));
+% l=(l-min(min(l)))./(max(max(l))-min(min(l)));
+l=limg(:);
 l=l(green_img_ind);
 % L=L(despec_index);
 histogram(l,500)
 set(gca,'FontSize',24,'FontWeight','bold'); 
-xlim([0 1.1])
+% xlim([0 1.1])
 
 figure(13);
 a=lab(:,:,2);
@@ -181,7 +183,7 @@ a=a(green_img_ind);
 histogram(a,500)
 set(gca,'FontSize',24,'FontWeight','bold'); 
 xlim([0 1.1])
-
+%%
 figure(14);
 b=lab(:,:,3);
 bimg=(b-min(min(b)))./(max(max(b))-min(min(b)));
@@ -194,7 +196,7 @@ set(gca,'FontSize',24,'FontWeight','bold');
 xlim([0 1.1])
 %%
 % figure;imagesc(lab);colormap('jet');caxis([0 1])
-figure;imagesc(limg);colormap('jet');caxis([0 1])
+figure;imagesc(limg);colormap('jet');colorbar%caxis([0 1])
 set(gca,'ytick',[],'xtick',[],'FontSize',24,'FontWeight','bold'); 
 figure;imagesc(aimg);colormap('jet');caxis([0 1])
 set(gca,'ytick',[],'xtick',[],'FontSize',24,'FontWeight','bold'); 

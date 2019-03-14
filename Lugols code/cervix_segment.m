@@ -2,12 +2,12 @@
 close all; clear all;
 dirlist = dir('*.tif');%dir('*.tif');
 % cd('S:\Nimmi\Cervix Data\Cervix Imaging - Cervix 1 Local');
-for i=1:1%length(dirlist)
+for i=1:length(dirlist)
     %read in data
     img = imread(dirlist(i).name);  
 
 %% Have to put in these variables before running
-folder = 'C:\Users\mna14\Desktop\Research\Cevix Image processing\Images\Peru\New images\Lugol\'; %Folder where the image is saved
+folder = 'X:\Mercy\VIA image processing\Duke AA\despec\'; %Folder where the image is saved
 % image =['L',num2str(i)]; %Image name
 filename=dirlist(i).name;%['C:\Users\mna14\Desktop\acetowhitening margin\Peru Lugol\Lugol\normal_all_brown\',image];
 % filename2=['C:\Users\mna14\Desktop\acetowhitening margin\Peru Lugol\Lugol\L2.tif'];

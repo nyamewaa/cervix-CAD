@@ -1,8 +1,8 @@
 function lesion_percent= lesionsize(image)
 img=imread(image);
-blue_img = img(:, :, 3);
-bw=blue_img<220;
-img2=uint8(double(img).* double(repmat(bw, [1 1 3])));
+% blue_img = img(:, :, 3);
+% bw=blue_img<220;
+% img2=uint8(double(img).* double(repmat(bw, [1 1 3])));
 % imshow(img2)
 
 % green_img=img2(:,:,3);%rgb2gray(img);%
@@ -12,7 +12,7 @@ img2=uint8(double(img).* double(repmat(bw, [1 1 3])));
 
 %% b wins
 %lab
-lab = rgb2lab(img2);
+lab = rgb2lab(img);
 b=lab(:,:,3);
 % figure;
 % imagesc(b);colormap('jet');colorbar;caxis([0 60])

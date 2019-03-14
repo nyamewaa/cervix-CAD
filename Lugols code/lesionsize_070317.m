@@ -1,5 +1,5 @@
 
-imdata=imread('L99.tif');
+imdata=imread('L173.tif');
 % Reading channels
 BC = imdata(:,:,3);
 bw=BC<220;
@@ -20,7 +20,7 @@ imshow(imdata, 'InitialMag', 'fit')
  h = imshow(red);
  hold off
  set(h, 'AlphaData',yellow_ind3)
-%%
+%% VILI
 figure;
 cform= makecform('srgb2lab');
 lab = applycform(img,cform);

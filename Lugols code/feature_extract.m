@@ -1,8 +1,8 @@
 %lugolProbMap
 % To run, navigate MATLAB to the folder in which the images are contained 
 clc, clear all
-%dirlist = dir('*.tif');
-%for n=77:77%length(dirlist) 
+dirlist = dir('*.tif');
+for n=1:length(dirlist) 
     %read in data
     img = imread('L99.tif');    
     

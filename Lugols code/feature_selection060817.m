@@ -17,10 +17,10 @@
 %first load features
 clc,clear
 %%
-[labels_biop1{1:48}] = deal('negative');
-[labels_biop1{49:107}] = deal('positive');
+[labels_biop1{1:58}] = deal('negative');
+[labels_biop1{59:134}] = deal('positive');
 labels_biop=labels_biop1';
-data=[colpo_neg;colpo_pos];
+data=[phys_neg;phys_pos];
 
 % [labels_biop{1:50}] = deal('normal');
 % [labels_biop{51:92}] = deal('lowgrade');
@@ -108,9 +108,9 @@ ylabel('CV MCE');
 title('Forward Sequential Feature Selection with cross-validation');
 %%
 %find the features for the number selected
-fsCVfor18 = fs1(historyCV.In(66,:))
+fsCVfor18 = fs1(historyCV.In(7,:))
 %order them
-[orderlist,ignore] = find( [historyCV.In(1,:); diff(historyCV.In(1:66,:) )]' );
+[orderlist,ignore] = find( [historyCV.In(1,:); diff(historyCV.In(1:7,:) )]' );
 orderlist_arranged=fs1(orderlist)';%get optimal features in order of selection
 optimal_names_seq=names(orderlist_arranged);%get feature names
 
@@ -127,17 +127,17 @@ legend({'5-fold CV MCE' 'Resubstitution MCE'},'location','NE');
 %% Using SVM
 
 %seperating data
- predTrain=dataTrain(:,orderlist_arranged); 
+ predTrain=data(:,orderlist); 
 %predTrain=dataTrain(:,[1:20]);
-respTrain=grpTrain;
+respTrain=labels_biop;%grpTrain;
 indsTrain = ~strcmp(respTrain,'negative');
 
-dataTest = data(holdoutCVP.test,:);
-grpTest = labels_biop(holdoutCVP.test);
-predTest=dataTest(:,orderlist_arranged);
-%predTest=dataTest(:,[1:20]);
-respTest=grpTest;
-indsTest=~strcmp(respTest,'negative');
+% dataTest = data(holdoutCVP.test,:);
+% grpTest = labels_biop(holdoutCVP.test);
+% predTest=dataTest(:,orderlist_arranged);
+% %predTest=dataTest(:,[1:20]);
+% respTest=grpTest;
+% indsTest=~strcmp(respTest,'negative');
 
 %using mdlSVM for training
 mdlSVM = fitcsvm(predTrain,indsTrain,'Standardize',true,'KernelFunction','RBF',...
@@ -145,18 +145,18 @@ mdlSVM = fitcsvm(predTrain,indsTrain,'Standardize',true,'KernelFunction','RBF',.
 mdlSVM = fitPosterior(mdlSVM);
 cvLDA=crossval(mdlSVM,'Kfold',5);%10 fold cross validation
 [predicted_label,score_svm] = kfoldPredict(cvLDA);
-[Xsvm,Ysvm,Tsvm,AUCsvm,Opt] = perfcurve(indsTrain,score_svm(:,mdlSVM.ClassNames),'true');
+[Xsvm,Ysvm,Tsvm,AUCsvm,Opt] = perfcurve(indsTrain,score_svm(:,mdlSVM.ClassNames),'true', 'NBoot',1000,'XVals',[0:0.05:1]);
 AUCsvm
 
-% testing on test data
-[label_test,score_test] = predict(mdlSVM,predTest);
-[Xsvmtest,Ysvmtest,Tsvmtest,AUCsvmtest,Opt_test] = perfcurve(indsTest,score_test(:,mdlSVM.ClassNames),'true');
-AUCsvmtest
-
-%log data
-mdl = fitglm(predTrain,indsTrain,'Distribution','binomial');
-score_new_log = predict(mdl,predTest);
-[Xlog,Ylog,Tlog,AUClog] = perfcurve(indsTest,score_new_log,'true');
+% % testing on test data
+% [label_test,score_test] = predict(mdlSVM,predTest);
+% [Xsvmtest,Ysvmtest,Tsvmtest,AUCsvmtest,Opt_test] = perfcurve(indsTest,score_test(:,mdlSVM.ClassNames),'true','NBoot',1000,'XVals',[0:0.05:1]);
+% AUCsvmtest
+% 
+% %log data
+% mdl = fitglm(predTrain,indsTrain,'Distribution','binomial');
+% score_new_log = predict(mdl,predTest);
+% [Xlog,Ylog,Tlog,AUClog] = perfcurve(indsTest,score_new_log,'true');
 %% plots
 %load concordance
 truelabels_biop=concordance(:,7);
@@ -184,9 +184,12 @@ CP_v_con=classperf(truelabels_con,venegas,'Positive','Positive','Negative','Nega
 %plot ROC
 x=[0:1];
 y=x;
-plot(Xsvm,Ysvm,'k-',Xlog,Ylog,'b-','linewidth',2)
+% plot(Xsvmtest,Ysvmtest,'k-','linewidth',2)
+errorbar(Xsvm,Ysvm(:,1),Ysvm(:,1)-Ysvm(:,2),Ysvm(:,3)-Ysvm(:,1));
 hold on
 plot(x,y,'k--')
+hold off
+legend(['SAUC=',num2str(AUCsvm)],'Random chance')
 %%
 plot((1-CP_s_con.Specificity),CP_s_con.Sensitivity,'bs','MarkerSize',10,'MarkerFaceColor','b')%schmitt overall
 plot((1-CP_p_con.Specificity),CP_p_con.Sensitivity,'go','MarkerSize',10,'MarkerFaceColor','g')%peyton overall
